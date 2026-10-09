@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>بِينَاتْنَا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ===== الألوان (غيّرها من هنا فقط) ===== */
+  :root {
+    --color-primary: #09317b;   /* الأزرق الملكي الداكن */
+    --color-accent: #1AB0C8;    /* الأزرق المخضر */
+    --color-white: #FFFFFF;
+    --color-bg: #F4F8FB;
+    --color-text: #1B2438;
+    --color-border: #D9E2EC;
+    --color-note-bg: #E8F7FA;   /* خلفية صندوق التنويه */
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: "Cairo", "Segoe UI", Tahoma, Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1.9;
+    color: var(--color-text);
+    background: var(--color-bg);
+  }
+
+  /* ===== أعلى الصفحة ===== */
+  .hero {
+    background: var(--color-primary);
+    color: var(--color-white);
+    text-align: center;
+  }
+  .hero-banner {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .hero-content {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 16px 32px;
+  }
+  .hero-logo {
+    display: block;
+    height: 88px;
+    width: auto;
+    max-width: 100%;
+    margin: 0 auto 12px;
+  }
+  .hero h1 {
+    margin: 0 0 8px;
+    font-size: 2rem;
+    font-weight: 800;
+  }
+  .hero p {
+    margin: 0 0 24px;
+    font-size: 1.1rem;
+  }
+  .hero-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-decoration: none;
+    text-align: center;
+    border: 2px solid transparent;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color-primary);
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--color-white);
+    border-color: var(--color-white);
+  }
+  .btn:focus-visible,
+  .accordion-title:focus-visible,
+  .text-link:focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  /* ===== الأقسام المنسدلة ===== */
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 24px 16px 40px;
+  }
+
+  .accordion-item {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    scroll-margin-top: 12px;
+  }
+  .accordion-item h2 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+  .accordion-title {
+    width: 100%;
+    min-height: 56px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: var(--color-white);
+    border: 0;
+    font-family: inherit;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-align: start;
+    cursor: pointer;
+  }
+  .accordion-item.open .accordion-title {
+    background: var(--color-primary);
+    color: var(--color-white);
+  }
+
+  /* السهم: يظهر في الجهة اليسرى (نهاية السطر في الاتجاه RTL) */
+  .arrow {
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+    border-inline-end: 3px solid var(--color-accent);
+    border-block-end: 3px solid var(--color-accent);
+    transform: rotate(45deg);
+    transition: transform 0.25s ease;
+    margin-bottom: 4px;
+  }
+  .accordion-item.open .arrow {
+    transform: rotate(-135deg);
+    margin-bottom: -4px;
+  }
+
+  .panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+  }
+  .accordion-item.open .panel {
+    grid-template-rows: 1fr;
+  }
+  .panel-inner {
+    overflow: hidden;
+    visibility: hidden;
+  }
+  .accordion-item.open .panel-inner {
+    visibility: visible;
+  }
+  .panel-body {
+    padding: 8px 16px 20px;
+  }
+  .panel-body p {
+    margin: 12px 0;
+  }
+  .panel-body h3 {
+    margin: 24px 0 4px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    padding-inline-start: 10px;
+    border-inline-start: 4px solid var(--color-accent);
+  }
+
+  /* القوائم النقطية */
+  .panel-body ul {
+    margin: 12px 0;
+    padding: 0;
+    padding-inline-start: 24px;
+    list-style: disc;
+  }
+  .panel-body li {
+    margin-bottom: 10px;
+    padding-inline-start: 4px;
+  }
+  .panel-body li::marker {
+    color: var(--color-accent);
+  }
+
+  /* الروابط داخل النصوص (تظهر كأزرار صغيرة سهلة اللمس) */
+  .text-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 4px 16px;
+    margin: 2px 0;
+    border-radius: 10px;
+    background: var(--color-accent);
+    color: var(--color-primary);
+    font-weight: 700;
+    text-decoration: none;
+    line-height: 1.5;
+  }
+  .text-link:hover {
+    filter: brightness(0.92);
+  }
+
+  /* صندوق التنويه */
+  .note-box {
+    margin: 20px 0 4px;
+    padding: 14px 16px;
+    background: var(--color-note-bg);
+    border: 1px solid var(--color-accent);
+    border-inline-start: 6px solid var(--color-accent);
+    border-radius: 12px;
+  }
+  .note-box strong {
+    color: var(--color-primary);
+  }
+
+  /* ===== بطاقات خطوات دسكورد (القسم 4) ===== */
+  .steps {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .step-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(9, 49, 123, 0.06);
+  }
+  .step-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .step-number {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: var(--color-white);
+    border: 3px solid var(--color-accent);
+    font-size: 1.4rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .step-text {
+    flex: 1;
+    min-width: 0;
+    padding-top: 6px;
+  }
+  .panel-body .step-text p {
+    margin: 0;
+  }
+  .step-image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 16px auto 0;
+    border-radius: 14px;
+    border: 1px solid var(--color-border);
+  }
+
+  /* قائمة روابط التحميل في الخطوة 1 */
+  .panel-body .store-list {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+  }
+  .panel-body .store-list li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 10px;
+    margin: 0 0 8px;
+    padding: 0;
+  }
+  .panel-body .step-image + .store-list {
+    margin-top: 16px;
+  }
+
+  /* الكلمات الإنجليزية داخل الخطوات (تظهر كأزرار التطبيق) */
+  .app-badge {
+    display: inline-block;
+    direction: ltr;
+    unicode-bidi: isolate;
+    margin: 0 2px;
+    padding: 0 10px;
+    border-radius: 8px;
+    background: var(--color-primary);
+    color: var(--color-white);
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 0.9em;
+    font-weight: 600;
+    line-height: 1.7;
+    white-space: nowrap;
+  }
+
+  /* زر الانضمام في نهاية القسم 4 */
+  .join-wrap {
+    margin-top: 28px;
+  }
+  .btn-join {
+    width: 100%;
+    min-height: 60px;
+    font-size: 1.2rem;
+    font-weight: 800;
+  }
+  .btn-join:hover {
+    filter: brightness(0.92);
+  }
+
+  /* ===== القسم 5: كيف تعمل الدورات؟ (مخطط عمودي متصل) ===== */
+  .panel-body .flow {
+    list-style: none;
+    margin: 16px 0;
+    padding: 0;
+  }
+  .flow-step {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin: 0;
+    padding: 0 0 18px;
+  }
+  .flow-step:last-child {
+    padding-bottom: 0;
+  }
+  /* الخط الواصل بين الدوائر */
+  .flow-step::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 20px;
+    top: 44px;
+    bottom: 0;
+    width: 4px;
+    border-radius: 2px;
+    background: var(--color-accent);
+    opacity: 0.45;
+  }
+  .flow-step:last-child::before {
+    display: none;
+  }
+  .flow-number {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: var(--color-white);
+    border: 3px solid var(--color-accent);
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .flow-text {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 14px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+  }
+
+  /* ===== القسم 5: أهم السياسات (بطاقات) ===== */
+  .panel-body .policy-list {
+    list-style: none;
+    margin: 16px 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .panel-body .policy-list li {
+    margin: 0;
+    padding: 12px 16px;
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-inline-start: 5px solid var(--color-accent);
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(9, 49, 123, 0.05);
+  }
+  .policy-title {
+    display: block;
+    margin-bottom: 2px;
+    font-weight: 800;
+    color: var(--color-primary);
+  }
+  .policy-btn-wrap {
+    margin-top: 16px;
+  }
+
+  /* ===== القسم 6: صندوق الخصوصية مع أيقونة القفل ===== */
+  .note-lock {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .lock-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    margin-top: 6px;
+    color: var(--color-primary);
+  }
+  .note-lock p {
+    margin: 0;
+  }
+
+  /* ===== القسم 7: فرص التطوع (شبكة بطاقات) ===== */
+  .panel-body .roles-grid {
+    list-style: none;
+    margin: 16px 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .panel-body .roles-grid li {
+    margin: 0;
+    padding: 12px 16px;
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-top: 4px solid var(--color-accent);
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(9, 49, 123, 0.05);
+  }
+  .role-title {
+    display: block;
+    margin-bottom: 2px;
+    font-weight: 800;
+    color: var(--color-primary);
+  }
+
+  /* ===== القسم 7: فوائد التطوع (قائمة بأيقونات صح) ===== */
+  .panel-body .check-list {
+    list-style: none;
+    margin: 12px 0;
+    padding: 0;
+  }
+  .panel-body .check-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 0 0 12px;
+    padding: 0;
+  }
+  .check-icon {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    margin-top: 6px;
+    padding: 4px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: var(--color-primary);
+  }
+  .panel-body .closing-text {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  /* ===== القسم 7: فرص التقدّم (صندوق واحد) ===== */
+  .progress-box p:first-child {
+    margin-top: 0;
+  }
+  .progress-box p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ===== منطقة المشاركة والتواصل (أسفل الصفحة) ===== */
+  .bottom-area {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 16px 40px;
+  }
+  .bottom-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    padding: 20px 16px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .bottom-card h2 {
+    margin: 0 0 8px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--color-primary);
+  }
+  .bottom-card p {
+    margin: 8px 0 16px;
+  }
+  .bottom-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  /* صورة QR على خلفية بيضاء مع هامش */
+  .qr-box {
+    display: inline-block;
+    max-width: 100%;
+    margin: 4px auto 20px;
+    padding: 16px;
+    background: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+  }
+  .qr-image {
+    display: block;
+    width: 200px;
+    min-width: 180px;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  /* رابط الموقع (نص صغير قابل للتحديد) */
+  .site-url {
+    display: block;
+    margin-top: 12px;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    direction: ltr;
+    unicode-bidi: plaintext;
+    text-align: center;
+    word-break: break-all;
+    -webkit-user-select: all;
+    user-select: all;
+    color: var(--color-text);
+  }
+
+  /* ===== أسفل الصفحة ===== */
+ footer {
+    background: var(--color-primary);
+    color: var(--color-white);
+    text-align: center;
+    padding: 24px 16px;
+    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+  .footer-logo {
+    display: block;
+    height: 49px;
+    width: auto;
+    max-width: 100%;
+    margin: 0 auto 8px;
+  }
+.img_logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    align-content: center;
+}
+  .footer-note {
+    margin: 4px 0 0;
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.7;
+    opacity: 0.9;
+  }
+  .footer-note:first-of-type {
+    margin-top: 12px;
+  }
+  @media (min-width: 640px) {
+    .hero-buttons {
+      flex-direction: row;
+      justify-content: center;
+    }
+    .btn { min-width: 240px; }
+    .hero h1 { font-size: 2.4rem; }
+    .btn-join { width: auto; min-width: 320px; margin-inline: auto; }
+    .panel-body .roles-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .bottom-buttons {
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .panel, .arrow { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===== أعلى الصفحة ===== -->
+  <header class="hero">
+    <img class="hero-banner" src="images/binatna_banner.jpg" alt="بِينَاتْنَا">
+    <div class="hero-content">
+  
+      <p>منصة أكاديمية لطلبة التعليم عن بُعد، الحاليين والخريجين، في الجامعة المفتوحة بليبيا.</p>
+      <div class="hero-buttons">
+        <a class="btn btn-primary" href= "https://discord.gg/XJvYrkevsT" target="_blank" rel="noopener">انضم إلى المنصة على دسكورد</a>
+        <a class="btn btn-secondary" href="#how-to-start">كيف أبدأ؟</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== الأقسام ===== -->
+  <main>
+
+    <!-- 1 -->
+    <section class="accordion-item" id="about">
+      <h2>
+        <button class="accordion-title" type="button" aria-expanded="false" aria-controls="panel-1" id="title-1">
+          <span>من نحن</span><span class="arrow" aria-hidden="true"></span>
+        </button>
+      </h2>
+      <div class="panel" id="panel-1" role="region" aria-labelledby="title-1">
+        <div class="panel-inner">
+          <div class="panel-body">
+            <p>بِينَاتْنَا منصة أكاديمية مستقلة، أُنشئت خصيصًا لطلبة التعليم عن بُعد في الجامعة المفتوحة بدولة ليبيا، الحاليين منهم والخريجين، بجميع الفروع والتخصصات. المنصة غير تابعة للجامعة المفتوحة.</p>
+            <p>أسّسها طلاب من داخل الجامعة، لديهم خبرة عملية من مشاريع سابقة ومعرفة مباشرة بتخصص الإدارة. فالتعليم عن بُعد يمنح مرونة، لكنه غالبًا يفتقر إلى المحاضرات المباشرة والشرح الموجَّه. ولهذا توفّر المنصة طبقة تعليمية تربط الطلبة الحاليين بخريجين وطلبة متقدمين مؤهلين، ضمن بيئة منظمة يستفيد فيها الطرفان.</p>
+
+            <h3>رؤيتنا</h3>
+            <p>ليست بِينَاتْنَا مجرد منصة، بل تصوّر مختلف للتعليم الجامعي. نهدف إلى سدّ فجوة الشرح الموجَّه وضعف التفاعل التي يواجهها طلبة التعليم عن بُعد، عبر بيئة قائمة على التعاون وتبادل المعرفة بين الطلبة أنفسهم.</p>
+            <p>التعلّم عندنا ليس فرديًا ولا في اتجاه واحد، بل ينشأ من شبكة علاقات أكاديمية يكمّل فيها كل فرد دور الآخر، ليحصل الطالب على دعم حقيقي، وشرح أوضح، وتجربة تعليمية أكثر تفاعلًا واستمرارية.</p>
+
+            <h3>الاسم والهوية</h3>
+            <p>اسم «بِينَاتْنَا» مأخوذ من معنى «بين»: المساحة المشتركة التي تجمع الأفراد. وهو يعكس فكرة المنصة: معرفة تُتداول بين الطلبة أنفسهم، يتعلم فيها الطلاب من بعضهم، ويشرح المؤهلون لزملائهم.</p>
+            <p>والشعار شبكة مترابطة من النقاط والمسارات تمثّل الطلبة داخل منظومة تعليمية واحدة. الترابط يرمز إلى تبادل المعرفة والتعاون المستمر، والمركز يرمز إلى الطالب باعتباره محور العملية التعليمية، والشكل العام يوحي بالنمو ورحلة التعلّم التي تبدأ من الفرد وتمتد عبر المجتمع.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="accordion-item" id="offer">
+      <h2>
+        <button class="accordion-title" type="button" aria-expanded="false" aria-controls="panel-2" id="title-2">
+          <span>ما نقدّمه</span><span class="arrow" aria-hidden="true"></span>
+        </button>
+      </h2>
+      <div class="panel" id="panel-2" role="region" aria-labelledby="title-2">
+        <div class="panel-inner">
+          <div class="panel-body">
+
+            <h3>ما الذي يميّزنا</h3>
+            <ul>
+              <li>شرح مُعدّ وفق منهجك الجامعي الفعلي</li>
+              <li>متابعة الحضور لضمان الاستمرارية</li>
+              <li>اختيار دقيق للمدربين بعد اختبارهم كمتطوعين أولًا</li>
+              <li>مدربون من الخريجين أو الطلبة المتفوقين الذين سبق لهم اجتياز المواد التي يقدّمونها</li>
+              <li>إدارة منظمة داخل نظام موحّد بدلًا من المجموعات العشوائية وغير المنظمة (مثل مجموعات ماسنجر وواتساب وتيليجرام)</li>
+              <li>مسار منظم للتدرّج من طالب متعلّم، إلى محاضر متطوع، إلى مدرّب معتمد داخل المنصة</li>
+              <li>فرص للمدربين المميزين للانتقال إلى أدوار تنظيمية وتسويقية مستقبلًا</li>
+            </ul>
+            <p>هذه منظومة أكاديمية متكاملة وليست دروسًا خصوصية عشوائية، وتتيح للأعضاء الملتزمين التطور من مشاركين إلى مساهمين موثوقين.</p>
+
+            <h3>لمن هذه المنصة؟</h3>
+            <ul>
+              <li>طلبة التعليم عن بُعد الباحثون عن التوجيه والانضباط</li>
+              <li>من يفضّلون النظام على العشوائية</li>
+              <li>من يسعون إلى تحسين مستواهم الأكاديمي</li>
+              <li>الخريجون والطلبة المتفوقون الراغبون في التدريس</li>
+            </ul>
+            <p>إذا كنت طالبًا أو خريجًا في الجامعة المفتوحة بليبيا، فقد صُمّمت هذه المساحة لأجلك.</p>
+
+            <h3>كيف تستفيد أكاديميًا؟</h3>
+            <ul>
+              <li>دروس متوافقة مباشرة مع مقرراتك الجامعية</li>
+              <li>دورات منظمة ضمن مجموعات تعزّز التفاعل</li>
+              <li>مواعيد مرنة تناسب طبيعة التعليم عن بُعد</li>
+              <li>شروحات واضحة تعزّز الفهم والاستيعاب</li>
+              <li>حصص فردية مكثفة لدعم مركّز يضمن التركيز عليك</li>
+              <li>محاضرات أونلاين بالكامل يمكنك حضورها من أي مكان</li>
+              <li>تسجيل ودفع إلكتروني بالكامل (أكثر من 10 طرق دفع) عبر هاتفك داخل السيرفر</li>
+            </ul>
+            <p>يساعدك ذلك على الدراسة بذكاء، والاستمرار بانتظام، وتحقيق أداء أفضل في الامتحانات النهائية.</p>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="accordion-item" id="how-to-start">
+      <h2>
+        <button class="accordion-title" type="button" aria-expanded="false" aria-controls="panel-3" id="title-3">
+          <span>كيف تبدأ؟</span><span class="arrow" aria-hidden="true"></span>
+        </button>
+      </h2>
+      <div class="panel" id="panel-3" role="region" aria-labelledby="title-3">
+        <div class="panel-inner">
+          <div class="panel-body">
+
+            <p>إذا وصلت إلينا عبر إعلان، أو كانت هذه أول مرة تستخدم فيها دسكورد، ابدأ من <a class="text-link" href="http://t.me/BinatnaPlatform/4845" target="_blank" rel="noopener noreferrer">غرفة الدعم والتوجيه</a> على تيليجرام، وأرسل لنا:</p>
+            <ul>
+              <li>الدرجة العلمية (بكالوريوس / ماجستير)</li>
+              <li>التخصص في الجامعة المفتوحة</li>
+              <li>المواد المسجّلة لهذا الفصل الدراسي</li>
+            </ul>
+
+            <p>وسنرد عليك مباشرة لمساعدتك في:</p>
+            <ul>
+              <li>معرفة الدورات المتاحة لموادك الدراسية</li>
+              <li>معرفة المجتمعات المتاحة لك في دسكورد</li>
+              <li>إنشاء حساب على دسكورد إن لم يكن لديك حساب</li>
+              <li>الانضمام إلى السيرفر المركزي للمنصة بسهولة</li>
+            </ul>
+
+            <h3>بعد انضمامك إلى السيرفر</h3>
+            <p>اختر المسار الذي يناسبك:</p>
+            <ul>
+              <li>تبحث عن الدورات التفاعلية الجماعية أو الدورات الفردية المكثفة؟ توجّه إلى <a class="text-link" href="https://discord.com/channels/532233040957669396/1478793605320802466" target="_blank" rel="noopener noreferrer">قناة الدورات</a></li>
+              <li>ترغب في المساهمة في تطوير مجتمعات بِينَاتْنَا، تعليميًا أو تنظيميًا أو بمساعدة زملائك؟ توجّه إلى <a class="text-link" href="https://discord.com/channels/532233040957669396/1483468065441186034" target="_blank" rel="noopener noreferrer">قناة المبادرة التطوعية</a></li>
+            </ul>
+
+            <div class="note-box">
+              <strong>تنويه:</strong> جميع دورات وجلسات بِينَاتْنَا تتم عبر السيرفر المركزي داخل تطبيق دسكورد. مجموعة التيليجرام مخصصة لمساعدتك خطوة بخطوة حتى تتمكن من الوصول إليه.
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section class="accordion-item" id="discord-guide">
+      <h2>
+        <button class="accordion-title" type="button" aria-expanded="false" aria-controls="panel-4" id="title-4">
+          <span>خطوات إنشاء حساب على دسكورد</span><span class="arrow" aria-hidden="true"></span>
+        </button>
+      </h2>
+      <div class="panel" id="panel-4" role="region" aria-labelledby="title-4">
+        <div class="panel-inner">
+          <div class="panel-body">
+
+            <ol class="steps">
+
+              <!-- الخطوة 1 -->
+              <li class="step-card">
+                <div class="step-head">
+                  <span class="step-number" aria-hidden="true">1</span>
+                  <div class="step-text">
+                    <p><strong>حمّل تطبيق دسكورد الرسمي</strong> من متجر التطبيقات الخاص بجهازك:</p>
+                  </div>
+                </div>
+                <img class="step-image" src="images/Discord_banner.jpg" alt="شعار دسكورد، التطبيق المطلوب تحميله في الخطوة الأولى" loading="lazy">
+                <ul class="store-list">
+                  <li>أجهزة أندرويد: من <a class="text-link" dir="ltr" href="https://play.google.com/store/apps/details?id=com.discord" target="_blank" rel="noopener noreferrer">Google Play</a></li>
+                  <li>أجهزة آيفون وآيباد: من <a class="text-link" dir="ltr" href="https://apps.apple.com/us/app/discord-talk-play-hang-out/id985746746" target="_blank" rel="noopener noreferrer">App Store</a></li>
+                  <li>الكمبيوتر: من <a class="text-link" href="https://discord.com/" target="_blank" rel="noopener noreferrer">الموقع الرسمي</a> عبر المتصفح</li>
+                </ul>
+              </li>
+
+              <!-- الخطوة 2 -->
+              <li class="step-card">
+                <div class="step-head">
+                  <span class="step-number" aria-hidden="true">2</span>
+                  <div class="step-text">
+                    <p><strong>افتح التطبيق</strong> واضغط <span class="app-badge" dir="ltr">Register</span> (تسجيل) لبدء إنشاء حسابك.</p>
+                  </div>
+                </div>
+                <img class="step-image" src="images/log-in.jpg" alt="شاشة دخول تطبيق دسكورد وفيها زر Register لبدء إنشاء الحساب" loading="lazy">
+              </li>
+
+              <!-- الخطوة 3 -->
+              <li class="step-card">
+                <div class="step-head">
+                  <span class="step-number" aria-hidden="true">3</span>
+                  <div class="step-text">
+                    <p><strong>أدخل بريدك الإلكتروني أو رقم هاتفك.</strong></p>
+                  </div>
+                </div>
+                <img class="step-image" src="images/email_or_phone.jpg" alt="شاشة إدخال البريد الإلكتروني أو رقم الهاتف" loading="lazy">
+              </li>
+
+              <!-- الخطوة 4 -->
+              <li class="step-card">
+                <div class="step-head">
+                  <span class="step-number" aria-hidden="true">4</span>
+                  <div class="step-text">
+                    <p><strong>أدخل اسمك الحقيقي.</strong> يمكنك استخدام الرموز التعبيرية والأحرف الخاصة.</p>
+                  </div>
+                </div>
+                <img class="step-image" src="images/whats_your_name.jpg" alt="شاشة إدخال الاسم عند إنشاء حساب دسكورد" loading="lazy">
+              </li>
+
+              <!-- الخطوة 5 -->
+              <li class="step-card">
+                <div class="step-head">
+                  <span class="step-number" aria-hidden="true">5</span>
+                  <div class="step-text">
+                    <p><strong>اختر اسم مستخدم</strong> (<span class="app-badge" dir="ltr">Username</span>) يتكوّن من حروف إنجليزية وأرقام وشرطات سفلية ونقاط فقط.</p>
+                  </div>
+                </div>
+                <img class="step-image" src="images/username.jpg" alt="شاشة اختيار اسم المستخدم في دسكورد" loading="lazy">
+              </li>
+
+              <!-- الخطوة 6 -->
+              <li class="step-card">
+                <div class="step-head">
+                  <span class="step-number" aria-hidden="true">6</span>
+                  <div class="step-text">
+                    <p><strong>أنشئ كلمة مرور قوية</strong> وتذكّرها (8 أحرف أو أكثر).</p>
+                  </div>
+                </div>
+                <img class="step-image" src="images/password.jpg" alt="شاشة إنشاء كلمة المرور في دسكورد" loading="lazy">
+              </li>
+
+              <!-- الخطوة 7 -->
+              <li class="step-card">
+                <div class="step-head">
+                  <span class="step-number" aria-hidden="true">7</span>
+                  <div class="step-text">
+                    <p><strong>اختر تاريخ ميلادك</strong>، وتأكد من أنه تاريخ صحيح.</p>
+                  </div>
+                </div>
+                <img class="step-image" src="images/age.jpg" alt="شاشة إدخال تاريخ الميلاد في دسكورد" loading="lazy">
+              </li>
+                           <!-- الخطوة 8 -->
+              <li class="step-card">
+                <div class="step-head">
+                  <span class="step-number" aria-hidden="true">8</span>
+                  <div class="step-text">
+                    <p><strong>اضغط <span class="app-badge" dir="ltr">Create Account</span> (إنشاء حساب)</strong></p>
+                  </div>
+                </div>
+                <img class="step-image" src="images/create_account.jpg" alt="شاشة الضغط على زر Create Account لإنهاء إنشاء الحساب" loading="lazy">
+              </li>
+
+              <!-- الخطوة 9 -->
+              <li class="step-card">
+                <div class="step-head">
+                  <span class="step-number" aria-hidden="true">9</span>
+                  <div class="step-text">
+                    <p><strong>أكّد بريدك الإلكتروني</strong> عبر الرسالة التي ستصلك، وفيها رابط أو رمز للتحقق، ثم <strong>سجّل الدخول</strong> وابدأ باستخدام حسابك بشكل طبيعي.</p>
+                  </div>
+                </div>
+              </li>
+
+              <!-- الخطوة 10 -->
+              <li class="step-card">
+                <div class="step-head">
+                  <span class="step-number" aria-hidden="true">10</span>
+                  <div class="step-text">
+                    <p><strong>أضف صورة لملفك الشخصي</strong> لتتميّز.</p>
+                  </div>
+                </div>
+              </li>
+
+            </ol>
+
+            <!-- زر الانضمام (نفس رابط الزر في أعلى الصفحة) -->
+            <div class="join-wrap">
+              <a class="btn btn-primary btn-join" href="https://discord.gg/XJvYrkevsT" target="_blank" rel="noopener">انضم إلى سيرفر بِينَاتْنَا</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section class="accordion-item" id="courses-policies">
+      <h2>
+        <button class="accordion-title" type="button" aria-expanded="false" aria-controls="panel-5" id="title-5">
+          <span>الدورات والسياسات</span><span class="arrow" aria-hidden="true"></span>
+        </button>
+      </h2>
+      <div class="panel" id="panel-5" role="region" aria-labelledby="title-5">
+        <div class="panel-inner">
+          <div class="panel-body">
+
+            <h3>كيف تعمل الدورات؟</h3>
+            <ol class="flow">
+              <li class="flow-step">
+                <span class="flow-number" aria-hidden="true">1</span>
+                <div class="flow-text">انضم إلى السيرفر، وستحصل تلقائيًا على صلاحية الاطلاع على معلومات المنصة وخدماتها.</div>
+              </li>
+              <li class="flow-step">
+                <span class="flow-number" aria-hidden="true">2</span>
+                <div class="flow-text">اختر دورة من <a class="text-link" href="https://discord.com/channels/532233040957669396/1480600276879675412" target="_blank" rel="noopener noreferrer">الدورات المعلنة</a>، وافتح تذكرة في <a class="text-link" href="https://discord.com/channels/532233040957669396/1479161238092251337" target="_blank" rel="noopener noreferrer">غرفة حجز الجلسات التجريبية</a>.</div>
+              </li>
+              <li class="flow-step">
+                <span class="flow-number" aria-hidden="true">3</span>
+                <div class="flow-text">احضر الجلسة التجريبية لتتعرف على أسلوب المدرب ومحتوى الدورة. حضورها لا يُعد تسجيلًا ولا يضمن لك مقعدًا.</div>
+              </li>
+              <li class="flow-step">
+                <span class="flow-number" aria-hidden="true">4</span>
+                <div class="flow-text">إذا قررت الالتحاق، أبلغ المدرب ليتم فتح قنوات الدفع لك، ثم أكمل التسجيل والدفع حسب <a class="text-link" href="https://discord.com/channels/532233040957669396/1490825320650113144" target="_blank" rel="noopener noreferrer">إرشادات الدفع</a>.</div>
+              </li>
+              <li class="flow-step">
+                <span class="flow-number" aria-hidden="true">5</span>
+                <div class="flow-text">بعد تأكيد الدفع تحصل على صلاحية الدورة: قنواتها وغرفها الصوتية ومحتواها التعليمي.</div>
+              </li>
+            </ol>
+
+            <h3>أهم السياسات</h3>
+            <ul class="policy-list">
+              <li>
+                <span class="policy-title">القنوات الرسمية</span>
+                تتم جميع إجراءات الحجز والتسجيل والدفع والاستفسار عبر القنوات ونظام التذاكر داخل السيرفر فقط، وليس عبر الرسائل الخاصة أو مجموعات خارجية.
+              </li>
+              <li>
+                <span class="policy-title">الإشعارات</span>
+                يُرجى تفعيل إشعارات السيرفر بالكامل، فتفويت الإشعارات مسؤولية العضو.
+              </li>
+              <li>
+                <span class="policy-title">الحضور والسلوك</span>
+                الالتزام بمواعيد الجلسات (مع فترة انتظار 15 دقيقة)، وإبقاء الميكروفون مغلقًا عند عدم التحدث، والالتزام بموضوع المادة.
+              </li>
+              <li>
+                <span class="policy-title">المحتوى</span>
+                مواد الدورات للتعلم الشخصي فقط، ولا يجوز تسجيلها أو مشاركتها أو بيعها. واسم المنصة وشعارها ومحتواها ملك للمنصة.
+              </li>
+              <li>
+                <span class="policy-title">الدفع والاسترداد</span>
+                الدفع مسبق وغير قابل للاسترداد إلا في حالات محددة، مثل تعذّر إقامة جلسات من جهة المدرب أو إتمام الدورة بعدد جلسات أقل من المدفوع. والجلسات الفائتة بسبب الطالب لا تُعوَّض ولا تُسترد إلا باستثناء تعتمده الإدارة.
+              </li>
+              <li>
+                <span class="policy-title">التحديثات</span>
+                تحتفظ الإدارة بحق تحديث السياسات، وتُعلن التعديلات في <a class="text-link" href="https://discord.com/channels/532233040957669396/1522244650474274887" target="_blank" rel="noopener noreferrer">قناة الإعلانات</a>.
+              </li>
+            </ul>
+
+            <div class="note-box">الانضمام إلى السيرفر أو استخدام خدمات المنصة يعني الموافقة على السياسات الكاملة (الإصدار 2.0).</div>
+
+            <div class="policy-btn-wrap">
+              <a class="btn btn-primary btn-join" href="https://discord.com/channels/532233040957669396/1478793605320802466/1530984449674711092" target="_blank" rel="noopener">قراءة السياسات الكاملة</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section class="accordion-item" id="volunteer-communities">
+      <h2>
+        <button class="accordion-title" type="button" aria-expanded="false" aria-controls="panel-6" id="title-6">
+          <span>المجتمعات التطوعية</span><span class="arrow" aria-hidden="true"></span>
+        </button>
+      </h2>
+      <div class="panel" id="panel-6" role="region" aria-labelledby="title-6">
+        <div class="panel-inner">
+          <div class="panel-body">
+
+            <p>مبادرات تعليمية تفاعلية ضمن منصة بِينَاتْنَا، تهدف إلى بناء منظومة طلابية مترابطة تغطي مجموعة من التخصصات والأقسام، عبر مجتمعات متفرعة من السيرفر المركزي للمنصة على دسكورد.</p>
+
+            <p>توفّر المبادرة بيئة داعمة تساعد الطلاب على:</p>
+            <ul>
+              <li>المذاكرة الجماعية</li>
+              <li>تبادل المعرفة والملخصات والكتب وأرشيف أسئلة الامتحانات السابقة</li>
+              <li>حضور الشروحات والمحاضرات التطوعية</li>
+              <li>المشاركة في أنشطة تعليمية متنوعة عبر غرف نصية وصوتية ومرئية، مدعومة بأدوات تفاعلية مثل السبورة الإلكترونية والاختبارات القصيرة</li>
+            </ul>
+
+            <p>المبادرة مستقلة بالكامل ولا تتبع الجامعة المفتوحة، وهي جهد طلابي قائم على التعاون والمشاركة لدعم المسيرة الأكاديمية لجميع أعضائها. وتقتصر العضوية على طلاب الجامعة المفتوحة فقط، ويتم الوصول إليها بعد <a class="text-link" href="https://discord.com/channels/532233040957669396/1483468065441186034/1486125186137722992" target="_blank" rel="noopener noreferrer">التحقق من هوية الطالب</a>.</p>
+
+            <h3>كيف تنضم إلى المبادرة؟</h3>
+
+            <ol class="steps">
+
+              <!-- الخطوة 1 -->
+              <li class="step-card">
+                <div class="step-head">
+                  <span class="step-number" aria-hidden="true">1</span>
+                  <div class="step-text">
+                    <p>ادخل سيرفر بِينَاتْنَا عبر <a class="text-link" href="https://discord.gg/XJvYrkevsT" target="_blank" rel="noopener noreferrer">رابط الانضمام</a>.</p>
+                  </div>
+                </div>
+              </li>
+
+              <!-- الخطوة 2 -->
+              <li class="step-card">
+                <div class="step-head">
+                  <span class="step-number" aria-hidden="true">2</span>
+                  <div class="step-text">
+                    <p>افتح تذكرة داخل السيرفر في <a class="text-link" href="https://discord.com/channels/532233040957669396/1483468065441186034/1486125186137722992" target="_blank" rel="noopener noreferrer">غرفة المبادرة</a>، واختر نوع الطلب المناسب: الانضمام، أو استرجاع العضوية، أو استبدال الحساب.</p>
+                  </div>
+                </div>
+              </li>
+
+              <!-- الخطوة 3 -->
+              <li class="step-card">
+                <div class="step-head">
+                  <span class="step-number" aria-hidden="true">3</span>
+                  <div class="step-text">
+                    <p>عبّئ النموذج المبسط، وقدّم إثباتًا (صورة من بطاقة الطالب أو لقطة شاشة من بوابة الطالب) يوضح بجلاء: الاسم كاملًا، والتخصص، ورقم القيد، والفرع.</p>
+                  </div>
+                </div>
+              </li>
+
+            </ol>
+
+            <div class="note-box note-lock">
+              <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <rect x="4" y="11" width="16" height="10" rx="2"></rect>
+                <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+              </svg>
+              <p>يُرسل إثبات الهوية داخل غرفة التذكرة الخاصة في السيرفر فقط، ولا يُنشر علنًا.</p>
+            </div>
+
+            <p>يُرجى الالتزام بحساب دسكورد واحد فقط لكل طالب. وتُزال الحسابات غير النشطة تلقائيًا مع الوقت، للحفاظ على بيئة طلابية نشطة ومتفاعلة.</p>
+
+            <div class="join-wrap">
+             <a class="btn btn-primary btn-join" href="https://discord.com/channels/532233040957669396/1483468065441186034/1486125186137722992" target="_blank" rel="noopener">انضم إلى المبادرة التطوعية</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section class="accordion-item" id="volunteer-apply">
+      <h2>
+        <button class="accordion-title" type="button" aria-expanded="false" aria-controls="panel-7" id="title-7">
+          <span>التطوع والتقدّم</span><span class="arrow" aria-hidden="true"></span>
+        </button>
+      </h2>
+      <div class="panel" id="panel-7" role="region" aria-labelledby="title-7">
+        <div class="panel-inner">
+          <div class="panel-body">
+
+            <h3>فرص التطوع</h3>
+            <p>تتيح المبادرة الانضمام إلى فريق «رواد النهضة»، وهو فريق طلابي يساهم في تشغيل المبادرة وتطويرها من خلال عدة أدوار، منها:</p>
+            <ul class="roles-grid">
+              <li>
+                <span class="role-title">مشرف الشات</span>
+                استقبال الأعضاء، وتنظيم المحادثات، والإشراف على الالتزام بالقواعد، وتوجيه المستخدمين تقنيًا
+              </li>
+              <li>
+                <span class="role-title">وصيّ المراجع</span>
+                إدارة كتب ومراجع المواد، وتحديثها باستمرار، والتأكد من دقتها وتنظيمها
+              </li>
+              <li>
+                <span class="role-title">منظّم الملخصات</span>
+                مراجعة جودة الملخصات وتنسيقها وترتيبها، وتوثيق أصحابها
+              </li>
+              <li>
+                <span class="role-title">منسّق الأرشيف</span>
+                تجميع أوراق الامتحانات وتنظيمها وترتيبها زمنيًا، وضمان جودتها وعدم تكرارها
+              </li>
+              <li>
+                <span class="role-title">مندوب العلاقات</span>
+                دعوة أعضاء جدد، وبناء الشراكات، وتعزيز التفاعل والانتماء داخل المجتمع
+              </li>
+              <li>
+                <span class="role-title">مدرّب الطلاب</span>
+                تخطيط المحاضرات وتقديمها، ومتابعة الطلاب، والإجابة على استفساراتهم مع توفير موارد داعمة
+              </li>
+              <li>
+                <span class="role-title">مستضيف الصوتيات</span>
+                تنظيم الجلسات الصوتية واستضافتها، ومشاركة المحتوى، ومتابعة تفاعل الحضور
+              </li>
+              <li>
+                <span class="role-title">مرشد أكاديمي</span>
+                توجيه الطلاب أكاديميًا، ومساعدتهم في التخطيط الدراسي، والإجابة على استفساراتهم
+              </li>
+            </ul>
+            <p>كل دور يساهم بشكل مباشر في بناء بيئة تعليمية متكاملة قائمة على التعاون.</p>
+
+            <h3>فوائد التطوع</h3>
+            <p>هذا أكثر من مجرد عمل تطوعي، إنه استثمار حقيقي في نفسك ومسارك الأكاديمي والمهني:</p>
+            <ul class="check-list">
+              <li>
+                <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="5 12.5 10 17.5 19 7.5"></polyline></svg>
+                <span>تطوّر مهاراتك العملية وتعزّز فرصك المهنية</span>
+              </li>
+              <li>
+                <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="5 12.5 10 17.5 19 7.5"></polyline></svg>
+                <span>يكون لك تأثير مباشر في تحسين المستوى الأكاديمي للمجتمع</span>
+              </li>
+              <li>
+                <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="5 12.5 10 17.5 19 7.5"></polyline></svg>
+                <span>تكتسب خبرات حقيقية تضيفها إلى سيرتك الذاتية بفخر</span>
+              </li>
+              <li>
+                <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="5 12.5 10 17.5 19 7.5"></polyline></svg>
+                <span>تنضم إلى بيئة داعمة تدفعك للتقدّم وتمنحك شعورًا بالانتماء</span>
+              </li>
+              <li>
+                <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="5 12.5 10 17.5 19 7.5"></polyline></svg>
+                <span>تطوّر مهارات متعددة، مثل إدارة الوقت والتدريس والتنظيم والتخطيط والتسويق والعمل الجماعي والتفكير التحليلي والاستراتيجي</span>
+              </li>
+            </ul>
+            <p class="closing-text">مساهمتك لا تفيد غيرك فقط، بل تصنع منك نسخة أقوى وأكثر جاهزية للمستقبل.</p>
+
+            <h3>فرص التقدّم والتطوير</h3>
+            <div class="note-box progress-box">
+              <p>تفتح المبادرة المجال أمام المتطوعين المتميزين للانتقال إلى مستويات أعلى من المسؤولية والتقدير.</p>
+              <p>حاليًا، يُختار بعض الأعضاء من دور «مدرّب الطلاب»، بناءً على الكفاءة والالتزام والمساهمات السابقة، للحصول على فرص مدفوعة بإشراف مباشر من مؤسس المنصة. ومع تطوّر المبادرة، ستتوسع هذه الفرص لتشمل أدوارًا إضافية، ما يتيح مسارًا واضحًا للنمو والتقدّم داخل بِينَاتْنَا.</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== منطقة المشاركة والتواصل ===== -->
+  <div class="bottom-area">
+
+    <div class="bottom-card">
+      <h2>شارك المنصة مع زملائك</h2>
+      <p>شارك المنصة مع زملائك: أرسل لهم رابط المنصة، أو دعهم يمسحون رمز QR بكاميرا هواتفهم.</p>
+      <div class="qr-box">
+        <img class="qr-image" src="images/qr-code.png" alt="رمز QR لفتح موقع بِينَاتْنَا" loading="lazy">
+      </div>
+      <div class="bottom-buttons">
+        <button class="btn btn-primary" id="copy-link-btn" type="button" aria-live="polite">نسخ الرابط</button>
+      </div>
+      <span class="site-url" id="site-url">{{WEBSITE_URL}}</span>
+    </div>
+
+    <div class="bottom-card">
+      <h2>تواصل معنا</h2>
+      <div class="bottom-buttons">
+        <a class="btn btn-primary" href="https://t.me/BinatnaPlatform" target="_blank" rel="noopener noreferrer">مجموعة التيليجرام</a>
+        <a class="btn btn-primary" href="https://t.me/BinatnaPlatform/4845" target="_blank" rel="noopener noreferrer">دعم الطلاب</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== أسفل الصفحة ===== -->
+  <footer>
+<div class="img_logo">
+    <img class="footer-logo" src="images/logo.png" alt="شعار بِينَاتْنَا">
+      <div>بِينَاتْنَا</div>
+</div>
+    <p class="footer-note">© 2026 بِينَاتْنَا. جميع الحقوق محفوظة.</p>
+    <p class="footer-note">منصة تعليمية مستقلة وغير تابعة للجامعة المفتوحة.</p>
+  </footer>
+
+<script>
+  // فتح وإغلاق الأقسام: قسم واحد مفتوح فقط في كل مرة
+  (function () {
+    var items = document.querySelectorAll('.accordion-item');
+
+    items.forEach(function (item) {
+      var button = item.querySelector('.accordion-title');
+      button.addEventListener('click', function () {
+        var isOpen = item.classList.contains('open');
+
+        items.forEach(function (other) {
+          other.classList.remove('open');
+          other.querySelector('.accordion-title').setAttribute('aria-expanded', 'false');
+        });
+
+        if (!isOpen) {
+          item.classList.add('open');
+          button.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    // زر "كيف أبدأ؟" في أعلى الصفحة: يفتح قسم "كيف تبدأ؟" وينزل إليه
+    var startLink = document.querySelector('a[href="#how-to-start"]');
+    var startSection = document.getElementById('how-to-start');
+
+    if (startLink && startSection) {
+      startLink.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        items.forEach(function (other) {
+          other.classList.remove('open');
+          other.querySelector('.accordion-title').setAttribute('aria-expanded', 'false');
+        });
+
+        startSection.classList.add('open');
+        startSection.querySelector('.accordion-title').setAttribute('aria-expanded', 'true');
+
+        // ننتظر انتهاء حركة الفتح والإغلاق ثم ننزل إلى القسم
+        setTimeout(function () {
+          startSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 350);
+      });
+    }
+
+    // زر "نسخ الرابط": ينسخ النص الظاهر تحت الزر (رابط الموقع)
+    var copyBtn = document.getElementById('copy-link-btn');
+    var urlEl = document.getElementById('site-url');
+
+    if (copyBtn && urlEl) {
+      var defaultLabel = copyBtn.textContent;
+      var resetTimer = null;
+
+      var showLabel = function (label, ms) {
+        copyBtn.textContent = label;
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(function () {
+          copyBtn.textContent = defaultLabel;
+        }, ms);
+      };
+
+      // تحديد نص الرابط ليتمكن المستخدم من نسخه يدويًا
+      var selectUrl = function () {
+        try {
+          var range = document.createRange();
+          range.selectNodeContents(urlEl);
+          var selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+        } catch (e) {}
+      };
+
+      // طريقة بديلة للنسخ إذا لم يُسمح باستخدام الحافظة المباشرة
+      var fallbackCopy = function (text) {
+        var ok = false;
+        var area = document.createElement('textarea');
+        area.value = text;
+        area.setAttribute('readonly', '');
+        area.style.position = 'fixed';
+        area.style.top = '0';
+        area.style.opacity = '0';
+        document.body.appendChild(area);
+        area.select();
+        try {
+          ok = document.execCommand('copy');
+        } catch (e) {
+          ok = false;
+        }
+        document.body.removeChild(area);
+        return ok;
+      };
+
+      var copyManually = function (text) {
+        if (fallbackCopy(text)) {
+          showLabel('تم النسخ ✓', 2000);
+        } else {
+          selectUrl();
+          showLabel('حدّد الرابط وانسخه', 3000);
+        }
+      };
+
+      copyBtn.addEventListener('click', function () {
+        var text = urlEl.textContent.trim();
+
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).then(function () {
+            showLabel('تم النسخ ✓', 2000);
+          }, function () {
+            copyManually(text);
+          });
+        } else {
+          copyManually(text);
+        }
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
